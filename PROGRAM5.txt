@@ -1,0 +1,61 @@
+import java.util.*;
+
+class p5 {
+    private int windowSize;
+    private int totalPackets;
+    private boolean[] acknowledged;
+
+    // Constructor
+    public p5(int windowSize, int totalPackets) {
+        this.windowSize = windowSize;
+        this.totalPackets = totalPackets;
+        this.acknowledged = new boolean[totalPackets];
+        Arrays.fill(this.acknowledged, false);
+    }
+
+    // Method to simulate sending packets with sliding window
+    public void sendPackets() {
+        int nextPacket = 0; // next packet to be sent
+
+        while (nextPacket < totalPackets) {
+            // Step 1: Send packets within the window range
+            System.out.println("Sending packets from " + nextPacket + " to " + Math.min(nextPacket + windowSize - 1, totalPackets - 1));
+
+            // Step 2: Simulate the receiver acknowledging packets
+            acknowledgePackets(nextPacket);
+
+            // Step 3: Slide the window
+            nextPacket = slideWindow();
+        }
+
+        System.out.println("All packets are acknowledged and received successfully.");
+    }
+
+    // Method to simulate the acknowledgment process
+    private void acknowledgePackets(int start) {
+        for (int i = start; i < Math.min(start + windowSize, totalPackets); i++) {
+            // Simulate acknowledgment (in real world, this would be done by the receiver)
+            acknowledged[i] = true;
+            System.out.println("Packet " + i + " acknowledged.");
+        }
+    }
+
+    // Method to slide the window
+    private int slideWindow() {
+        // Move the window forward by checking for the first unacknowledged packet
+        for (int i = 0; i < totalPackets; i++) {
+            if (!acknowledged[i]) {
+                return i;
+            }
+        }
+        return totalPackets; // If all packets are acknowledged, exit
+    }
+
+    public static void main(String[] args) {
+        int windowSize = 4; // Maximum number of unacknowledged packets at a time
+        int totalPackets = 10; // Total number of packets to be sent
+
+         p5 swp = new p5(windowSize, totalPackets);
+        swp.sendPackets();
+    }
+}
